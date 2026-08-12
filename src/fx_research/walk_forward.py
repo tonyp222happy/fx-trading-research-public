@@ -34,9 +34,9 @@ def run_walk_forward(data: pd.DataFrame, strategy_fn, base_params: dict, backtes
     end = data.index.max()
     fold = 0
     while True:
-        train_start = start + pd.Timedelta(days=fold * step_days)
-        train_end = train_start + pd.Timedelta(days=train_days)
-        test_end = train_end + pd.Timedelta(days=test_days)
+        train_start = start + pd.DateOffset(days=int(fold * step_days))
+        train_end = train_start + pd.DateOffset(days=int(train_days))
+        test_end = train_end + pd.DateOffset(days=int(test_days))
         if test_end > end:
             break
         train = data[(data.index >= train_start) & (data.index < train_end)]

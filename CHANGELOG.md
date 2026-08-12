@@ -10,7 +10,7 @@ Initial prepared public research framework:
 - next-bar execution backtest engine
 - benchmark and risk-adjusted metrics
 - rolling walk-forward parameter selection
-- factor / Spearman IC analysis
+- factor / Spearman IC analysis without an undeclared scientific-computing dependency
 - signal combination helper
 - reproducibility report and data hash manifest
 - deterministic synthetic demo data generator
