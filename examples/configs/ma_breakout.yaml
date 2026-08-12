@@ -1,0 +1,43 @@
+experiment:
+  name: example_ma_breakout
+  output_dir: runs/example_ma_breakout
+
+data:
+  path: examples/data/EURUSD_M5_sample.csv
+  source: synthetic_generator
+  datetime_column: datetime
+  timezone: UTC
+  signal_timeframe: 15min
+
+strategy:
+  callable: fx_research.strategies.example_ma_breakout:generate_signals
+  params:
+    fast_ma: 20
+    slow_ma: 60
+
+backtest:
+  starting_equity: 10000
+  risk_fraction: 0.01
+  stop_pct: 0.004
+  take_profit_pct: 0.008
+  max_hold_bars: 96
+  commission_bps: 0.0
+  slippage_bps: 0.0
+  intrabar_priority: stop_first
+
+validation:
+  minimum_trades: 5
+  maximum_drawdown: 0.20
+
+walk_forward:
+  enabled: true
+  train_days: 30
+  test_days: 10
+  step_days: 10
+  parameter_grid:
+    fast_ma: [10, 20, 30]
+    slow_ma: [40, 60, 90]
+
+factor_ic:
+  enabled: true
+  horizons_bars: [4, 16, 32]

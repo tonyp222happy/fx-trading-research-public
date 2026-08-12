@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets / local environment
+.env
+.env.*
+!.env.example
+
+# User market data and generated research runs
+data/
+examples/data/*.csv
+runs/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

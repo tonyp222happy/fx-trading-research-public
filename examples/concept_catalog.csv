@@ -1,0 +1,4 @@
+name,description,status,notes
+MA trend crossover,Fast moving average crosses above slow moving average,EXAMPLE,Educational baseline only
+ATR volatility breakout,Candle range exceeds an ATR threshold,UNTESTED,Example catalog entry
+RSI oversold reversal,RSI oversold condition followed by bullish reversal,UNTESTED,Example catalog entry
