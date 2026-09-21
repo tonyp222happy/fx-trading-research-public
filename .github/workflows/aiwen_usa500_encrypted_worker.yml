@@ -1,0 +1,54 @@
+name: AIWEN USA500 encrypted backfill worker
+
+on:
+  push:
+    branches:
+      - aiwen-usa500-backfill-worker
+    paths:
+      - ".github/workflows/aiwen_usa500_encrypted_worker.yml"
+      - "tools/aiwen_usa500_worker.py"
+      - "tools/aiwen_usa500_worker_public.pem"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        year: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: aiwen-usa500-backfill-worker
+
+      - name: Validate worker syntax
+        run: python3 -m py_compile tools/aiwen_usa500_worker.py
+
+      - name: Build and encrypt annual USA500 shard
+        run: |
+          mkdir -p /tmp/aiwen-usa500-encrypted
+          python3 tools/aiwen_usa500_worker.py \
+            --year "${{ matrix.year }}" \
+            --workers 4 \
+            --public-key tools/aiwen_usa500_worker_public.pem \
+            --output-dir /tmp/aiwen-usa500-encrypted
+
+      - name: Verify no plaintext output remains in artifact directory
+        run: |
+          test -z "$(find /tmp/aiwen-usa500-encrypted -type f \( -name '*.csv' -o -name '*.csv.gz' -o -name '*.tar.gz' \) -print -quit)"
+          find /tmp/aiwen-usa500-encrypted -maxdepth 1 -type f -printf '%f %s bytes\n' | sort
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aiwen-usa500-${{ matrix.year }}-encrypted
+          path: /tmp/aiwen-usa500-encrypted
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
